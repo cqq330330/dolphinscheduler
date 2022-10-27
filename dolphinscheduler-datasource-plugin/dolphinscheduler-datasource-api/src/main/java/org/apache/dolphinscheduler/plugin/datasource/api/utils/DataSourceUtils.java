@@ -29,6 +29,7 @@ import org.apache.dolphinscheduler.plugin.datasource.api.datasource.presto.Prest
 import org.apache.dolphinscheduler.plugin.datasource.api.datasource.redshift.RedshiftDataSourceProcessor;
 import org.apache.dolphinscheduler.plugin.datasource.api.datasource.spark.SparkDataSourceProcessor;
 import org.apache.dolphinscheduler.plugin.datasource.api.datasource.sqlserver.SQLServerDataSourceProcessor;
+import org.apache.dolphinscheduler.plugin.datasource.api.datasource.xugu.XuguDataSourceProcessor;
 import org.apache.dolphinscheduler.spi.datasource.ConnectionParam;
 import org.apache.dolphinscheduler.spi.enums.DbType;
 
@@ -54,6 +55,7 @@ public class DataSourceUtils {
     private static final DataSourceProcessor db2PROCESSOR = new Db2DataSourceProcessor();
     private static final DataSourceProcessor prestoPROCESSOR = new PrestoDataSourceProcessor();
     private static final DataSourceProcessor redshiftProcessor = new RedshiftDataSourceProcessor();
+    private static final DataSourceProcessor xuguProcessor = new XuguDataSourceProcessor();
 
     /**
      * check datasource param
@@ -124,6 +126,8 @@ public class DataSourceUtils {
                 return prestoPROCESSOR;
             case REDSHIFT:
                 return redshiftProcessor;
+            case XUGU:
+                return xuguProcessor;
             default:
                 throw new IllegalArgumentException("datasource type illegal:" + dbType);
         }

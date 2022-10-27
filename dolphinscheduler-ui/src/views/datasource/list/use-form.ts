@@ -175,6 +175,11 @@ export const datasourceType: IDataBaseOptionKeys = {
     label: 'MYSQL',
     defaultPort: 3306
   },
+  XUGU: {
+    value: 'XUGU',
+    label: 'XUGU',
+    defaultPort: 5138
+  },
   POSTGRESQL: {
     value: 'POSTGRESQL',
     label: 'POSTGRESQL',

@@ -69,6 +69,11 @@ export function useDataX(model: { [field: string]: any }): IJsonItem[] {
       id: 8,
       code: 'PRESTO',
       disabled: true
+    },
+    {
+      id: 9,
+      code: 'XUGU',
+      disabled: false
     }
   ]
   const datasourceTypeOptions = ref([] as any)
