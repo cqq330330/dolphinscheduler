@@ -30,7 +30,7 @@ DolphinScheduler adopts a decentralized multi-master and multi-worker architectu
 supports Kubernetes, Docker deployment and custom task types, distributed
 scheduling, with overall scheduling capability increased linearly with the
 scale of the cluster
- - Support various task types: Shell, MR, Spark, SQL (MySQL, PostgreSQL, hive, spark SQL), Python, Sub_Process, Procedure, etc.
+ - Support various task types: Shell, MR, Spark, SQL (MySQL, PostgreSQL, hive, spark SQL,Xugu), Python, Sub_Process, Procedure, etc.
  - Support scheduling of workflows and dependencies, manual scheduling to pause/stop/recover task, support failure task retry/alarm, recover specified nodes from failure, kill task, etc.
  - Associate the tasks according to the dependencies of the tasks in a DAG graph, which can visualize the running state of the task in real-time.
  - WYSIWYG online editing tasks
@@ -46,11 +46,11 @@ scale of the cluster
 
 ## What's in DolphinScheduler
 
- Stability | Accessibility | Features | Scalability |
- --------- | ------------- | -------- | ------------|
-Decentralized multi-master and multi-worker | Visualization of workflow key information, such as task status, task type, retry times, task operation machine information, visual variables, and so on at a glance.  |  Support pause, recover operation | Support customized task types
-support HA | Visualization of all workflow operations, dragging tasks to draw DAGs, configuring data sources and resources. At the same time, for third-party systems, provide API mode operations. | Users on DolphinScheduler can achieve many-to-one or one-to-one mapping relationship through tenants and Hadoop users, which is very important for scheduling large data jobs.  | The scheduler supports distributed scheduling, and the overall scheduling capability will increase linearly with the scale of the cluster. Master and Worker support dynamic adjustment.
-Overload processing: By using the task queue mechanism, the number of schedulable tasks on a single machine can be flexibly configured. Machine jam can be avoided with high tolerance to numbers of tasks cached in task queue. | One-click deployment | Support traditional shell tasks, and big data platform task scheduling: MR, Spark, SQL (MySQL, PostgreSQL, hive, spark SQL), Python, Procedure, Sub_Process |  |
+ Stability | Accessibility | Features                                                                                                                                                                       | Scalability |
+ --------- | ------------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| ------------|
+Decentralized multi-master and multi-worker | Visualization of workflow key information, such as task status, task type, retry times, task operation machine information, visual variables, and so on at a glance.  |  Support pause, recover operation                                                                                                                                              | Support customized task types
+support HA | Visualization of all workflow operations, dragging tasks to draw DAGs, configuring data sources and resources. At the same time, for third-party systems, provide API mode operations. | Users on DolphinScheduler can achieve many-to-one or one-to-one mapping relationship through tenants and Hadoop users, which is very important for scheduling large data jobs. | The scheduler supports distributed scheduling, and the overall scheduling capability will increase linearly with the scale of the cluster. Master and Worker support dynamic adjustment.
+Overload processing: By using the task queue mechanism, the number of schedulable tasks on a single machine can be flexibly configured. Machine jam can be avoided with high tolerance to numbers of tasks cached in task queue. | One-click deployment | Support traditional shell tasks, and big data platform task scheduling: MR, Spark, SQL (MySQL, PostgreSQL, hive, spark SQL,Xugu), Python, Procedure, Sub_Process               |  |
 
 ## User Interface Screenshots
 

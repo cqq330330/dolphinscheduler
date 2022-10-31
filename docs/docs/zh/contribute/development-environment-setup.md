@@ -180,6 +180,7 @@ DolphinScheduler 的元数据存储在关系型数据库中，目前支持的关
 
 ##### 启动服务
 
+使用Mysql
 我们需要启动三个服务，包括 MasterServer，WorkerServer，ApiApplicationServer
 
 * MasterServer：在 Intellij IDEA 中执行 `org.apache.dolphinscheduler.server.master.MasterServer` 中的 `main` 方法，并配置 *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Ddruid.mysql.usePingMethod=false -Dspring.profiles.active=mysql`
@@ -187,6 +188,15 @@ DolphinScheduler 的元数据存储在关系型数据库中，目前支持的关
 * ApiApplicationServer：在 Intellij IDEA 中执行 `org.apache.dolphinscheduler.api.ApiApplicationServer` 中的 `main` 方法，并配置 *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Dspring.profiles.active=api,mysql`。启动完成可以浏览 Open API 文档，地址为 http://localhost:12345/dolphinscheduler/doc.html
 
 > VM Options `-Dspring.profiles.active=mysql` 中 `mysql` 表示指定的配置文件
+
+使用虚谷
+我们需要启动三个服务，包括 MasterServer，WorkerServer，ApiApplicationServer
+
+* MasterServer：在 Intellij IDEA 中执行 `org.apache.dolphinscheduler.server.master.MasterServer` 中的 `main` 方法，并配置 *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Dspring.profiles.active=xugu`
+* WorkerServer：在 Intellij IDEA 中执行 `org.apache.dolphinscheduler.server.worker.WorkerServer` 中的 `main` 方法，并配置 *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Dspring.profiles.active=xugu`
+* ApiApplicationServer：在 Intellij IDEA 中执行 `org.apache.dolphinscheduler.api.ApiApplicationServer` 中的 `main` 方法，并配置 *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Dspring.profiles.active=api,xugu`。启动完成可以浏览 Open API 文档，地址为 http://localhost:12345/dolphinscheduler/doc.html
+
+> VM Options `-Dspring.profiles.active=xugu` 中 `xugu` 表示指定的配置文件
 
 ### 启动前端
 

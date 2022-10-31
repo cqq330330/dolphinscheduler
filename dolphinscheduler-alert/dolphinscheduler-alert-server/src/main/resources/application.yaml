@@ -82,3 +82,14 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/dolphinscheduler
     username: root
     password: root
+
+---
+spring:
+  config:
+    activate:
+      on-profile: xugu
+  datasource:
+    driver-class-name: com.xugu.cloudjdbc.Driver
+    url: jdbc:xugu://127.0.0.1:5138/dolphinscheduler
+    username: SYSDBA
+    password: SYSDBA

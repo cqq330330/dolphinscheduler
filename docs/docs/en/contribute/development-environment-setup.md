@@ -92,7 +92,7 @@ There are two ways to configure the DolphinScheduler development environment, st
 > 
 > Standalone is only supported in DolphinScheduler 1.3.9 and later versions.
 > 
-> Standalone server is able to connect to external databases like mysql and postgresql, see [Standalone Deployment](https://dolphinscheduler.apache.org/en-us/docs/dev/user_doc/guide/installation/standalone.html) for instructions.
+> Standalone server is able to connect to external databases like mysql and postgresql and xugu, see [Standalone Deployment](https://dolphinscheduler.apache.org/en-us/docs/dev/user_doc/guide/installation/standalone.html) for instructions.
 
 ### Git Branch Choose
 
@@ -139,7 +139,7 @@ Download [ZooKeeper](https://www.apache.org/dyn/closer.lua/zookeeper/zookeeper-3
 
 #### Database
 
-The DolphinScheduler's metadata is stored in relational database. Currently supported MySQL and Postgresql. We use MySQL as an example. Start the database and create a new database named dolphinscheduler as DolphinScheduler metabase
+The DolphinScheduler's metadata is stored in relational database. Currently supported MySQL and Postgresql and Xugu. We use MySQL as an example. Start the database and create a new database named dolphinscheduler as DolphinScheduler metabase
 
 After creating the new database, run the sql file under `dolphinscheduler/dolphinscheduler-dao/src/main/resources/sql/dolphinscheduler_mysql.sql` directly in MySQL to complete the database initialization
 
@@ -156,6 +156,11 @@ Following steps will guide how to start the DolphinScheduler backend service
   * Modify database configuration, modify the database configuration in the `dolphinscheduler-master/src/main/resources/application.yaml`
   * Modify database configuration, modify the database configuration in the `dolphinscheduler-worker/src/main/resources/application.yaml`
   * Modify database configuration, modify the database configuration in the `dolphinscheduler-api/src/main/resources/application.yaml`
+  
+  * If you use Xugu as your metadata database, you need to modify `dolphinscheduler/pom.xml` and change the `scope` of the `cloudjdbc` dependency to `compile`. This step is not necessary to use PostgreSQL
+  * Modify database configuration, modify the database configuration in the `dolphinscheduler-master/src/main/resources/application.yaml`
+  * Modify database configuration, modify the database configuration in the `dolphinscheduler-worker/src/main/resources/application.yaml`
+  * Modify database configuration, modify the database configuration in the `dolphinscheduler-api/src/main/resources/application.yaml`
 
 
 We here use MySQL with database, username, password named dolphinscheduler as an example
@@ -166,6 +171,15 @@ We here use MySQL with database, username, password named dolphinscheduler as an
        url: jdbc:mysql://127.0.0.1:3306/dolphinscheduler?useUnicode=true&characterEncoding=UTF-8
        username: dolphinscheduler
        password: dolphinscheduler
+  ```
+We here use Xugu with database, username, password named dolphinscheduler as an example
+  ```application.yaml
+   spring:
+     datasource:
+       driver-class-name: com.xugu.cloudjdbc.Driver
+       url: jdbc:xugu://127.0.0.1:5138/dolphinscheduler
+       username: SYSDBA
+       password: SYSDBA
   ```
 
 * Log level: add a line `<appender-ref ref="STDOUT"/>` to the following configuration to enable the log to be displayed on the command line
@@ -188,6 +202,7 @@ We here use MySQL with database, username, password named dolphinscheduler as an
 
 ##### Server start
 
+Use Mysql
 There are three services that need to be started, including MasterServer, WorkerServer, ApiApplicationServer.
 
 * MasterServer：Execute function `main` in the class `org.apache.dolphinscheduler.server.master.MasterServer` by Intellij IDEA, with the configuration *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Ddruid.mysql.usePingMethod=false -Dspring.profiles.active=mysql`
@@ -195,6 +210,15 @@ There are three services that need to be started, including MasterServer, Worker
 * ApiApplicationServer：Execute function `main` in the class `org.apache.dolphinscheduler.api.ApiApplicationServer` by Intellij IDEA, with the configuration *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Dspring.profiles.active=api,mysql`. After it started, you could find Open API documentation in http://localhost:12345/dolphinscheduler/doc.html
 
 > The `mysql` in the VM Options `-Dspring.profiles.active=mysql` means specified configuration file
+ 
+Use Xugu
+There are three services that need to be started, including MasterServer, WorkerServer, ApiApplicationServer.
+
+* MasterServer：Execute function `main` in the class `org.apache.dolphinscheduler.server.master.MasterServer` by Intellij IDEA, with the configuration *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Dspring.profiles.active=xugu`
+* WorkerServer：Execute function `main` in the class `org.apache.dolphinscheduler.server.worker.WorkerServer` by Intellij IDEA, with the configuration *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Dspring.profiles.active=xugu`
+* ApiApplicationServer：Execute function `main` in the class `org.apache.dolphinscheduler.api.ApiApplicationServer` by Intellij IDEA, with the configuration *VM Options* `-Dlogging.config=classpath:logback-spring.xml -Dspring.profiles.active=api,xugu`. After it started, you could find Open API documentation in http://localhost:12345/dolphinscheduler/doc.html
+
+> The `xugu` in the VM Options `-Dspring.profiles.active=xugu` means specified configuration file
 
 ### Start Frontend Server
 
