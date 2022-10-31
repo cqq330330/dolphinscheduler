@@ -41,11 +41,10 @@
             <version>${project.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.xugu</groupId>-->
-<!--            <artifactId>cloudjdbc</artifactId>-->
-<!--            <version>12.0.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.xugu</groupId>
+            <artifactId>cloudjdbc</artifactId>
+        </dependency>
 
 
         <dependency>
@@ -55,11 +54,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>maven-public</id>
-            <url>http://192.168.2.144:80/repository/maven-public</url>
-        </repository>
-    </repositories>
 </project>
