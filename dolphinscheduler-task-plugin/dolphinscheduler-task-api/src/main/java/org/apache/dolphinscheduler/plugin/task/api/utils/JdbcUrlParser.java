@@ -24,6 +24,7 @@ import static org.apache.dolphinscheduler.plugin.task.api.TaskConstants.SEMICOLO
 import static org.apache.dolphinscheduler.plugin.task.api.TaskConstants.SINGLE_SLASH;
 import static org.apache.dolphinscheduler.plugin.task.api.utils.DataQualityConstants.MYSQL;
 import static org.apache.dolphinscheduler.plugin.task.api.utils.DataQualityConstants.POSTGRESQL;
+import static org.apache.dolphinscheduler.plugin.task.api.utils.DataQualityConstants.XUGU;
 
 import org.apache.dolphinscheduler.plugin.task.api.model.JdbcInfo;
 import org.apache.dolphinscheduler.spi.enums.DbType;
@@ -44,6 +45,8 @@ public class JdbcUrlParser {
                 return DbType.MYSQL;
             case POSTGRESQL:
                 return DbType.POSTGRESQL;
+            case XUGU:
+                return DbType.XUGU;
             default:
                 return null;
         }

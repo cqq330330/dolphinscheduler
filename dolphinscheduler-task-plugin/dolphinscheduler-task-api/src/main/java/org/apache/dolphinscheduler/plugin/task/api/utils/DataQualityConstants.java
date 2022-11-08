@@ -98,5 +98,6 @@ public class DataQualityConstants {
      */
     public static final String MYSQL = "MYSQL";
     public static final String POSTGRESQL = "POSTGRESQL";
+    public static final String XUGU = "XUGU";
 
 }
