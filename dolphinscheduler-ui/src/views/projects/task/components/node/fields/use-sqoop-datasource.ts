@@ -42,6 +42,7 @@ export function useDatasource(
   }
   onMounted(() => {
     getDataSource('MYSQL')
+    getDataSource('XUGU')
   })
 
   return [
@@ -50,7 +51,7 @@ export function useDatasource(
       field: fieldType,
       name: t('project.node.datasource'),
       span: span,
-      options: [{ label: 'MYSQL', value: 'MYSQL' }],
+      options: [{ label: 'MYSQL', value: 'MYSQL' },{ label: 'XUGU', value: 'XUGU' }],
       validate: {
         required: true
       }

@@ -29,6 +29,7 @@ export function useTargetType(
   const hiveSpan = ref(0)
   const hdfsSpan = ref(24)
   const mysqlSpan = ref(0)
+  const xuguSpan = ref(0)
   const dataSourceSpan = ref(0)
   const updateSpan = ref(0)
 
@@ -37,9 +38,14 @@ export function useTargetType(
     hdfsSpan.value = unCustomSpan.value && model.targetType === 'HDFS' ? 24 : 0
     mysqlSpan.value =
       unCustomSpan.value && model.targetType === 'MYSQL' ? 24 : 0
+    xuguSpan.value =
+        unCustomSpan.value && model.targetType === 'XUGU' ? 24 : 0
     dataSourceSpan.value =
       unCustomSpan.value && model.targetType === 'MYSQL' ? 12 : 0
+    dataSourceSpan.value =
+        unCustomSpan.value && model.targetType === 'XUGU' ? 12 : 0
     updateSpan.value = mysqlSpan.value && model.targetMysqlIsUpdate ? 24 : 0
+    updateSpan.value = xuguSpan.value && model.targetXuguIsUpdate ? 24 : 0
   }
 
   const targetTypes = ref([
@@ -77,12 +83,35 @@ export function useTargetType(
             value: 'HDFS'
           }
         ]
+      case 'XUGU':
+        if (srcQueryType === '1') {
+          return [
+            {
+              label: 'HDFS',
+              value: 'HDFS'
+            }
+          ]
+        }
+        return [
+          {
+            label: 'HIVE',
+            value: 'HIVE'
+          },
+          {
+            label: 'HDFS',
+            value: 'HDFS'
+          }
+        ]
       case 'HDFS':
       case 'HIVE':
         return [
           {
             label: 'MYSQL',
             value: 'MYSQL'
+          },
+          {
+            label: 'XUGU',
+            value: 'XUGU'
           }
         ]
       default:
@@ -286,6 +315,12 @@ export function useTargetType(
       'targetMysqlType',
       'targetMysqlDatasource'
     ),
+    ...useDatasource(
+        model,
+        dataSourceSpan,
+        'targetXuguType',
+        'targetXuguDatasource'
+    ),
     {
       type: 'input',
       field: 'targetMysqlTable',
@@ -349,6 +384,82 @@ export function useTargetType(
     {
       type: 'radio',
       field: 'targetMysqlUpdateMode',
+      name: t('project.node.update_mode'),
+      span: updateSpan,
+      options: [
+        {
+          label: t('project.node.only_update'),
+          value: 'updateonly'
+        },
+        {
+          label: t('project.node.allow_insert'),
+          value: 'allowinsert'
+        }
+      ]
+    },
+    {
+      type: 'input',
+      field: 'targetXuguTable',
+      name: t('project.node.table'),
+      span: mysqlSpan,
+      props: {
+        placeholder: t('project.node.hive_table_tips')
+      },
+      validate: {
+        trigger: ['blur', 'input'],
+        required: true,
+        validator(validate, value) {
+          if (mysqlSpan.value && !value) {
+            return new Error(t('project.node.table_tips'))
+          }
+        }
+      }
+    },
+    {
+      type: 'input',
+      field: 'targetMysqlColumns',
+      name: t('project.node.column'),
+      span: mysqlSpan,
+      props: {
+        placeholder: t('project.node.column_tips')
+      }
+    },
+    {
+      type: 'input',
+      field: 'targetMysqlFieldsTerminated',
+      name: t('project.node.fields_terminated'),
+      span: mysqlSpan,
+      props: {
+        placeholder: t('project.node.fields_terminated_tips')
+      }
+    },
+    {
+      type: 'input',
+      field: 'targetMysqlLinesTerminated',
+      name: t('project.node.lines_terminated'),
+      span: mysqlSpan,
+      props: {
+        placeholder: t('project.node.lines_terminated_tips')
+      }
+    },
+    {
+      type: 'switch',
+      field: 'targetMysqlIsUpdate',
+      span: mysqlSpan,
+      name: t('project.node.is_update')
+    },
+    {
+      type: 'input',
+      field: 'targetMysqlTargetUpdateKey',
+      name: t('project.node.update_key'),
+      span: updateSpan,
+      props: {
+        placeholder: t('project.node.update_key_tips')
+      }
+    },
+    {
+      type: 'radio',
+      field: 'targetXuguUpdateMode',
       name: t('project.node.update_mode'),
       span: updateSpan,
       options: [

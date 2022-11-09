@@ -28,6 +28,7 @@ export function useSourceType(
 ): IJsonItem[] {
   const { t } = useI18n()
   const mysqlSpan = ref(24)
+  const xuguSpan = ref(24)
   const tableSpan = ref(0)
   const editorSpan = ref(24)
   const columnSpan = ref(0)
@@ -37,8 +38,12 @@ export function useSourceType(
   const resetSpan = () => {
     mysqlSpan.value =
       unCustomSpan.value && model.sourceType === 'MYSQL' ? 24 : 0
+    xuguSpan.value =
+        unCustomSpan.value && model.sourceType === 'XUGU' ? 24 : 0
     tableSpan.value = mysqlSpan.value && model.srcQueryType === '0' ? 24 : 0
     editorSpan.value = mysqlSpan.value && model.srcQueryType === '1' ? 24 : 0
+    tableSpan.value = xuguSpan.value && model.srcQueryType === '0' ? 24 : 0
+    editorSpan.value = xuguSpan.value && model.srcQueryType === '1' ? 24 : 0
     columnSpan.value = tableSpan.value && model.srcColumnType === '1' ? 24 : 0
     hiveSpan.value = unCustomSpan.value && model.sourceType === 'HIVE' ? 24 : 0
     hdfsSpan.value = unCustomSpan.value && model.sourceType === 'HDFS' ? 24 : 0
@@ -49,6 +54,10 @@ export function useSourceType(
     {
       label: 'MYSQL',
       value: 'MYSQL'
+    },
+    {
+      label: 'XUGU',
+      value: 'XUGU'
     }
   ] as IOption[])
 
@@ -59,6 +68,10 @@ export function useSourceType(
           {
             label: 'MYSQL',
             value: 'MYSQL'
+          },
+          {
+            label: 'XUGU',
+            value: 'XUGU'
           }
         ]
       case 'export':
@@ -77,6 +90,10 @@ export function useSourceType(
           {
             label: 'MYSQL',
             value: 'MYSQL'
+          },
+          {
+            label: 'XUGU',
+            value: 'XUGU'
           },
           {
             label: 'HDFS',

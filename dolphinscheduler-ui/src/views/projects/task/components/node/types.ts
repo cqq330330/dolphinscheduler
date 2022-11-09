@@ -33,7 +33,7 @@ export type {
 export type { IResource, ProgramType, IMainJar } from '@/store/project/types'
 export type { ITaskState } from '@/common/types'
 
-type SourceType = 'MYSQL' | 'HDFS' | 'HIVE'
+type SourceType = 'MYSQL' | 'XUGU' | 'HDFS' | 'HIVE'
 type ModelType = 'import' | 'export'
 type RelationType = 'AND' | 'OR'
 type ITaskType = TaskType
@@ -119,6 +119,15 @@ interface ISqoopTargetData {
   targetMysqlIsUpdate?: string
   targetMysqlTargetUpdateKey?: string
   targetMysqlUpdateMode?: string
+  targetXuguType?: string
+  targetXuguDatasource?: string
+  targetXuguTable?: string
+  targetXuguColumns?: string
+  targetXuguFieldsTerminated?: string
+  targetXuguLinesTerminated?: string
+  targetXuguIsUpdate?: string
+  targetXuguTargetUpdateKey?: string
+  targetXuguUpdateMode?: string
 }
 
 interface ISqoopSourceData {
@@ -129,6 +138,9 @@ interface ISqoopSourceData {
   sourceMysqlSrcQuerySql?: string
   sourceMysqlType?: string
   sourceMysqlDatasource?: string
+  sourceXuguSrcQuerySql?: string
+  sourceXuguType?: string
+  sourceXuguDatasource?: string
   mapColumnHive?: ILocalParam[]
   mapColumnJava?: ILocalParam[]
   sourceHdfsExportDir?: string

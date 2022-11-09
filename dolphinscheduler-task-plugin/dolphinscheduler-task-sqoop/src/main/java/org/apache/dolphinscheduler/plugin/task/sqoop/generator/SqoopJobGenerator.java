@@ -22,9 +22,11 @@ import org.apache.dolphinscheduler.plugin.task.sqoop.SqoopTaskExecutionContext;
 import org.apache.dolphinscheduler.plugin.task.sqoop.generator.sources.HdfsSourceGenerator;
 import org.apache.dolphinscheduler.plugin.task.sqoop.generator.sources.HiveSourceGenerator;
 import org.apache.dolphinscheduler.plugin.task.sqoop.generator.sources.MySQLSourceGenerator;
+import org.apache.dolphinscheduler.plugin.task.sqoop.generator.sources.XuguSourceGenerator;
 import org.apache.dolphinscheduler.plugin.task.sqoop.generator.targets.HdfsTargetGenerator;
 import org.apache.dolphinscheduler.plugin.task.sqoop.generator.targets.HiveTargetGenerator;
 import org.apache.dolphinscheduler.plugin.task.sqoop.generator.targets.MySQLTargetGenerator;
+import org.apache.dolphinscheduler.plugin.task.sqoop.generator.targets.XuguTargetGenerator;
 import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.SqoopParameters;
 
 /**
@@ -33,6 +35,8 @@ import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.SqoopParameters;
 public class SqoopJobGenerator {
 
     private static final String MYSQL = "MYSQL";
+
+    private static final String XUGU = "XUGU";
     private static final String HIVE = "HIVE";
     private static final String HDFS = "HDFS";
 
@@ -95,6 +99,8 @@ public class SqoopJobGenerator {
         switch (sourceType) {
             case MYSQL:
                 return new MySQLSourceGenerator();
+            case XUGU:
+                return new XuguSourceGenerator();
             case HIVE:
                 return new HiveSourceGenerator();
             case HDFS:
@@ -114,6 +120,8 @@ public class SqoopJobGenerator {
         switch (targetType) {
             case MYSQL:
                 return new MySQLTargetGenerator();
+            case XUGU:
+                return new XuguTargetGenerator();
             case HIVE:
                 return new HiveTargetGenerator();
             case HDFS:
