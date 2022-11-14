@@ -119,15 +119,6 @@ interface ISqoopTargetData {
   targetMysqlIsUpdate?: string
   targetMysqlTargetUpdateKey?: string
   targetMysqlUpdateMode?: string
-  targetXuguType?: string
-  targetXuguDatasource?: string
-  targetXuguTable?: string
-  targetXuguColumns?: string
-  targetXuguFieldsTerminated?: string
-  targetXuguLinesTerminated?: string
-  targetXuguIsUpdate?: string
-  targetXuguTargetUpdateKey?: string
-  targetXuguUpdateMode?: string
 }
 
 interface ISqoopSourceData {

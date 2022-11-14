@@ -21,6 +21,9 @@ import { useDatasource } from './use-sqoop-datasource'
 import { useCustomParams } from '.'
 import styles from '../index.module.scss'
 import type { IJsonItem, IOption, ModelType } from '../types'
+import {IDataBase} from "../types";
+import {queryDataSourceList} from "@/service/modules/data-source";
+import {find} from "lodash";
 
 export function useSourceType(
   model: { [field: string]: any },
@@ -28,27 +31,24 @@ export function useSourceType(
 ): IJsonItem[] {
   const { t } = useI18n()
   const mysqlSpan = ref(24)
-  const xuguSpan = ref(24)
   const tableSpan = ref(0)
   const editorSpan = ref(24)
   const columnSpan = ref(0)
   const hiveSpan = ref(0)
   const hdfsSpan = ref(0)
   const datasourceSpan = ref(12)
+  const dataSourceList = ref([])
+  const loading = ref(false)
   const resetSpan = () => {
     mysqlSpan.value =
-      unCustomSpan.value && model.sourceType === 'MYSQL' ? 24 : 0
-    xuguSpan.value =
-        unCustomSpan.value && model.sourceType === 'XUGU' ? 24 : 0
+      unCustomSpan.value && (model.sourceType === 'MYSQL' || model.sourceType === 'XUGU') ? 24 : 0
     tableSpan.value = mysqlSpan.value && model.srcQueryType === '0' ? 24 : 0
     editorSpan.value = mysqlSpan.value && model.srcQueryType === '1' ? 24 : 0
-    tableSpan.value = xuguSpan.value && model.srcQueryType === '0' ? 24 : 0
-    editorSpan.value = xuguSpan.value && model.srcQueryType === '1' ? 24 : 0
     columnSpan.value = tableSpan.value && model.srcColumnType === '1' ? 24 : 0
     hiveSpan.value = unCustomSpan.value && model.sourceType === 'HIVE' ? 24 : 0
     hdfsSpan.value = unCustomSpan.value && model.sourceType === 'HDFS' ? 24 : 0
     datasourceSpan.value =
-      unCustomSpan.value && model.sourceType === 'MYSQL' ? 12 : 0
+      unCustomSpan.value && (model.sourceType === 'MYSQL' || model.sourceType === 'XUGU') ? 12 : 0
   }
   const sourceTypes = ref([
     {
@@ -60,6 +60,30 @@ export function useSourceType(
       value: 'XUGU'
     }
   ] as IOption[])
+
+  const onChange = (type: IDataBase) => {
+    refreshOptionsAndSubOptions(type)
+  }
+
+  const refreshOptionsAndSubOptions = async (type: IDataBase) => {
+    model.sourceMysqlType = type;
+    if (loading.value) return
+    loading.value = true
+    const result = await queryDataSourceList({ type })
+    dataSourceList.value = result.map((item: { name: string; id: number }) => ({
+      label: item.name,
+      value: item.id
+    }))
+    loading.value = false
+    console.log(dataSourceList.value)
+    if (!result.length && model.sourceMysqlDatasource) model.sourceMysqlDatasource = null
+    if (result.length && model.sourceMysqlDatasource) {
+      const item = find(result, { id: model.sourceMysqlDatasource })
+      if (!item) {
+        model.sourceMysqlDatasource = null
+      }
+    }
+  }
 
   const getSourceTypesByModelType = (modelType: ModelType): IOption[] => {
     switch (modelType) {
@@ -144,7 +168,10 @@ export function useSourceType(
       field: 'sourceType',
       name: t('project.node.type'),
       span: unCustomSpan,
-      options: sourceTypes
+      options: sourceTypes,
+      props: {
+        'on-update:value': onChange
+      }
     },
     ...useDatasource(
       model,
@@ -310,13 +337,6 @@ export function useSourceType(
       model,
       field: 'mapColumnHive',
       name: 'map_column_hive',
-      isSimple: true,
-      span: mysqlSpan
-    }),
-    ...useCustomParams({
-      model,
-      field: 'mapColumnJava',
-      name: 'map_column_java',
       isSimple: true,
       span: mysqlSpan
     })

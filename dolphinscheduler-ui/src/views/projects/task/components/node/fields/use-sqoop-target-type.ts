@@ -139,7 +139,7 @@ export function useTargetType(
   )
 
   watch(
-    () => [unCustomSpan.value, model.targetType, model.targetMysqlIsUpdate],
+    () => [unCustomSpan.value, model.targetType, model.targetMysqlIsUpdate,model.targetXuguIsUpdate],
     () => {
       resetSpan()
     }
@@ -401,7 +401,7 @@ export function useTargetType(
       type: 'input',
       field: 'targetXuguTable',
       name: t('project.node.table'),
-      span: mysqlSpan,
+      span: xuguSpan,
       props: {
         placeholder: t('project.node.hive_table_tips')
       },
@@ -409,7 +409,7 @@ export function useTargetType(
         trigger: ['blur', 'input'],
         required: true,
         validator(validate, value) {
-          if (mysqlSpan.value && !value) {
+          if (xuguSpan.value && !value) {
             return new Error(t('project.node.table_tips'))
           }
         }
@@ -417,40 +417,40 @@ export function useTargetType(
     },
     {
       type: 'input',
-      field: 'targetMysqlColumns',
+      field: 'targetXuguColumns',
       name: t('project.node.column'),
-      span: mysqlSpan,
+      span: xuguSpan,
       props: {
         placeholder: t('project.node.column_tips')
       }
     },
     {
       type: 'input',
-      field: 'targetMysqlFieldsTerminated',
+      field: 'targetXuguFieldsTerminated',
       name: t('project.node.fields_terminated'),
-      span: mysqlSpan,
+      span: xuguSpan,
       props: {
         placeholder: t('project.node.fields_terminated_tips')
       }
     },
     {
       type: 'input',
-      field: 'targetMysqlLinesTerminated',
+      field: 'targetXuguLinesTerminated',
       name: t('project.node.lines_terminated'),
-      span: mysqlSpan,
+      span: xuguSpan,
       props: {
         placeholder: t('project.node.lines_terminated_tips')
       }
     },
     {
       type: 'switch',
-      field: 'targetMysqlIsUpdate',
-      span: mysqlSpan,
+      field: 'targetXuguIsUpdate',
+      span: xuguSpan,
       name: t('project.node.is_update')
     },
     {
       type: 'input',
-      field: 'targetMysqlTargetUpdateKey',
+      field: 'targetXuguTargetUpdateKey',
       name: t('project.node.update_key'),
       span: updateSpan,
       props: {
@@ -469,7 +469,7 @@ export function useTargetType(
         },
         {
           label: t('project.node.allow_insert'),
-          value: 'allowinsert'
+          value: ''
         }
       ]
     }

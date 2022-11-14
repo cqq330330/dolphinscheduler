@@ -130,19 +130,6 @@ export function formatParams(data: INodeData): {
             targetUpdateMode: data.targetMysqlUpdateMode
           }
           break
-        case 'XUGU':
-          targetParams = {
-            targetType: data.targetXuguType,
-            targetDatasource: data.targetXuguDatasource,
-            targetTable: data.targetXuguTable,
-            targetColumns: data.targetXuguColumns,
-            fieldsTerminated: data.targetXuguFieldsTerminated,
-            linesTerminated: data.targetXuguLinesTerminated,
-            isUpdate: data.targetXuguIsUpdate,
-            targetUpdateKey: data.targetXuguTargetUpdateKey,
-            targetUpdateMode: data.targetXuguUpdateMode
-          }
-          break
         default:
           break
       }
@@ -482,18 +469,6 @@ export function formatModel(data: ITaskData) {
       targetParams.targetUpdateMode === void 0
         ? 'allowinsert'
         : targetParams.targetUpdateMode
-    params.targetXuguType = targetParams.targetType
-    params.targetXuguDatasource = targetParams.targetDatasource
-    params.targetXuguTable = targetParams.targetTable
-    params.targetXuguColumns = targetParams.targetColumns
-    params.targetXuguFieldsTerminated = targetParams.fieldsTerminated
-    params.targetXuguLinesTerminated = targetParams.linesTerminated
-    params.targetXuguIsUpdate = targetParams.isUpdate
-    params.targetXuguTargetUpdateKey = targetParams.targetUpdateKey
-    params.targetXuguUpdateMode =
-        targetParams.targetUpdateMode === void 0
-            ? ''
-            : targetParams.targetUpdateMode
   }
   if (data.taskParams?.sourceParams) {
     const sourceParams: ISqoopSourceParams = JSON.parse(
@@ -503,12 +478,9 @@ export function formatModel(data: ITaskData) {
     params.srcColumnType = sourceParams.srcColumnType
     params.srcColumns = sourceParams.srcColumns
     params.sourceMysqlSrcQuerySql = sourceParams.srcQuerySql
-    params.sourceXuguSrcQuerySql = sourceParams.srcQuerySql
     params.srcQueryType = sourceParams.srcQueryType
     params.sourceMysqlType = sourceParams.srcType
     params.sourceMysqlDatasource = sourceParams.srcDatasource
-    params.sourceXuguType = sourceParams.srcType
-    params.sourceXuguDatasource = sourceParams.srcDatasource
     params.mapColumnHive = sourceParams.mapColumnHive || []
     params.mapColumnJava = sourceParams.mapColumnJava || []
     params.sourceHdfsExportDir = sourceParams.exportDir

@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-import { onMounted, ref, Ref } from 'vue'
+import { onMounted, ref,watch, Ref } from 'vue'
 import { queryDataSourceList } from '@/service/modules/data-source'
 import { useI18n } from 'vue-i18n'
 import type { IJsonItem, IDataBase } from '../types'
+import {TypeReq} from "@/service/modules/data-source/types";
+import {find} from "lodash";
 
 export function useDatasource(
   model: { [field: string]: any },
@@ -40,10 +42,41 @@ export function useDatasource(
     }))
     loading.value = false
   }
+  const refreshOptions = async (type: IDataBase) => {
+    if (loading.value) return
+    loading.value = true
+    const result = await queryDataSourceList({ type })
+    dataSourceList.value = result.map((item: { name: string; id: number }) => ({
+      label: item.name,
+      value: item.id
+    }))
+    loading.value = false
+    if (!result.length && model.sourceMysqlDatasource) model.sourceMysqlDatasource = null
+    if (result.length && model.sourceMysqlDatasource) {
+      const item = find(result, { id: model.sourceMysqlDatasource })
+      if (!item) {
+        model.sourceMysqlDatasource = null
+      }
+    }
+  }
+
+  const onChange = (type: IDataBase) => {
+    refreshOptions(type)
+  }
+
   onMounted(() => {
     getDataSource('MYSQL')
-    getDataSource('XUGU')
+    //getDataSource('XUGU')
   })
+
+  watch(
+      () => [
+        model.sourceMysqlType
+      ],
+      () => {
+        onChange(model.sourceMysqlType)
+      }
+  )
 
   return [
     {
@@ -54,7 +87,10 @@ export function useDatasource(
       options: [{ label: 'MYSQL', value: 'MYSQL' },{ label: 'XUGU', value: 'XUGU' }],
       validate: {
         required: true
-      }
+      },
+      props: {
+        'on-update:value': onChange
+      },
     },
     {
       type: 'select',

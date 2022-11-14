@@ -44,7 +44,7 @@
         </if>
     </select>
     <select id="existQueue" resultType="java.lang.Boolean">
-        select 1 = 1
+        select count(*)
         from t_ds_queue
         where 1 = 1
         <if test="queue != null and queue != ''">
