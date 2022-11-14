@@ -42,7 +42,7 @@ export function useDatasource(
     }))
     loading.value = false
   }
-  const refreshOptions = async (type: IDataBase) => {
+  const refreshOptionsSource = async (type: IDataBase) => {
     if (loading.value) return
     loading.value = true
     const result = await queryDataSourceList({ type })
@@ -60,8 +60,30 @@ export function useDatasource(
     }
   }
 
-  const onChange = (type: IDataBase) => {
-    refreshOptions(type)
+  const refreshOptionsTarget = async (type: IDataBase) => {
+    if (loading.value) return
+    loading.value = true
+    const result = await queryDataSourceList({ type })
+    dataSourceList.value = result.map((item: { name: string; id: number }) => ({
+      label: item.name,
+      value: item.id
+    }))
+    loading.value = false
+    if (!result.length && model.targetMysqlDatasource) model.targetMysqlDatasource = null
+    if (result.length && model.targetMysqlDatasource) {
+      const item = find(result, { id: model.targetMysqlDatasource })
+      if (!item) {
+        model.targetMysqlDatasource = null
+      }
+    }
+  }
+
+  const onChangeSource = (type: IDataBase) => {
+    refreshOptionsSource(type)
+  }
+
+  const onChangeTarget = (type: IDataBase) => {
+    refreshOptionsTarget(type)
   }
 
   onMounted(() => {
@@ -74,7 +96,16 @@ export function useDatasource(
         model.sourceMysqlType
       ],
       () => {
-        onChange(model.sourceMysqlType)
+        onChangeSource(model.sourceMysqlType)
+      }
+  )
+
+  watch(
+      () => [
+        model.targetMysqlType
+      ],
+      () => {
+        onChangeSource(model.targetMysqlType)
       }
   )
 
@@ -89,7 +120,7 @@ export function useDatasource(
         required: true
       },
       props: {
-        'on-update:value': onChange
+        'on-update:value': onChangeTarget
       },
     },
     {

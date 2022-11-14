@@ -62,7 +62,9 @@ export function useSourceType(
   ] as IOption[])
 
   const onChange = (type: IDataBase) => {
-    refreshOptionsAndSubOptions(type)
+    if(type=== 'MYSQL'|| type === 'XUGU'){
+      refreshOptionsAndSubOptions(type)
+    }
   }
 
   const refreshOptionsAndSubOptions = async (type: IDataBase) => {
@@ -114,10 +116,6 @@ export function useSourceType(
           {
             label: 'MYSQL',
             value: 'MYSQL'
-          },
-          {
-            label: 'XUGU',
-            value: 'XUGU'
           },
           {
             label: 'HDFS',

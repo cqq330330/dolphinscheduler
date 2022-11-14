@@ -20,6 +20,9 @@ import { useI18n } from 'vue-i18n'
 import { useDatasource } from './use-sqoop-datasource'
 import styles from '../index.module.scss'
 import type { IJsonItem, IOption, SourceType } from '../types'
+import {IDataBase} from "../types";
+import {queryDataSourceList} from "@/service/modules/data-source";
+import {find} from "lodash";
 
 export function useTargetType(
   model: { [field: string]: any },
@@ -29,23 +32,19 @@ export function useTargetType(
   const hiveSpan = ref(0)
   const hdfsSpan = ref(24)
   const mysqlSpan = ref(0)
-  const xuguSpan = ref(0)
   const dataSourceSpan = ref(0)
   const updateSpan = ref(0)
+  const dataSourceList = ref([])
+  const loading = ref(false)
 
   const resetSpan = () => {
     hiveSpan.value = unCustomSpan.value && model.targetType === 'HIVE' ? 24 : 0
     hdfsSpan.value = unCustomSpan.value && model.targetType === 'HDFS' ? 24 : 0
     mysqlSpan.value =
-      unCustomSpan.value && model.targetType === 'MYSQL' ? 24 : 0
-    xuguSpan.value =
-        unCustomSpan.value && model.targetType === 'XUGU' ? 24 : 0
+      unCustomSpan.value && (model.targetType === 'MYSQL'||model.targetType === 'XUGU')? 24 : 0
     dataSourceSpan.value =
-      unCustomSpan.value && model.targetType === 'MYSQL' ? 12 : 0
-    dataSourceSpan.value =
-        unCustomSpan.value && model.targetType === 'XUGU' ? 12 : 0
+      unCustomSpan.value && (model.targetType === 'MYSQL'||model.targetType === 'XUGU') ? 12 : 0
     updateSpan.value = mysqlSpan.value && model.targetMysqlIsUpdate ? 24 : 0
-    updateSpan.value = xuguSpan.value && model.targetXuguIsUpdate ? 24 : 0
   }
 
   const targetTypes = ref([
@@ -58,6 +57,32 @@ export function useTargetType(
       value: 'HDFS'
     }
   ] as IOption[])
+
+  const onChange = (type: IDataBase) => {
+    if(type=== 'MYSQL'|| type === 'XUGU'){
+      refreshOptionsAndSubOptions(type)
+    }
+  }
+
+  const refreshOptionsAndSubOptions = async (type: IDataBase) => {
+    model.targetMysqlType = type;
+    if (loading.value) return
+    loading.value = true
+    const result = await queryDataSourceList({ type })
+    dataSourceList.value = result.map((item: { name: string; id: number }) => ({
+      label: item.name,
+      value: item.id
+    }))
+    loading.value = false
+    console.log(dataSourceList.value)
+    if (!result.length && model.targetMysqlDatasource) model.targetMysqlDatasource = null
+    if (result.length && model.targetMysqlDatasource) {
+      const item = find(result, { id: model.targetMysqlDatasource })
+      if (!item) {
+        model.targetMysqlDatasource = null
+      }
+    }
+  }
 
   const getTargetTypesBySourceType = (
     sourceType: SourceType,
@@ -139,7 +164,7 @@ export function useTargetType(
   )
 
   watch(
-    () => [unCustomSpan.value, model.targetType, model.targetMysqlIsUpdate,model.targetXuguIsUpdate],
+    () => [unCustomSpan.value, model.targetType, model.targetMysqlIsUpdate],
     () => {
       resetSpan()
     }
@@ -161,7 +186,10 @@ export function useTargetType(
       field: 'targetType',
       name: t('project.node.type'),
       span: unCustomSpan,
-      options: targetTypes
+      options: targetTypes,
+      props: {
+        'on-update:value': onChange
+      }
     },
     {
       type: 'input',
@@ -315,12 +343,6 @@ export function useTargetType(
       'targetMysqlType',
       'targetMysqlDatasource'
     ),
-    ...useDatasource(
-        model,
-        dataSourceSpan,
-        'targetXuguType',
-        'targetXuguDatasource'
-    ),
     {
       type: 'input',
       field: 'targetMysqlTable',
@@ -394,82 +416,6 @@ export function useTargetType(
         {
           label: t('project.node.allow_insert'),
           value: 'allowinsert'
-        }
-      ]
-    },
-    {
-      type: 'input',
-      field: 'targetXuguTable',
-      name: t('project.node.table'),
-      span: xuguSpan,
-      props: {
-        placeholder: t('project.node.hive_table_tips')
-      },
-      validate: {
-        trigger: ['blur', 'input'],
-        required: true,
-        validator(validate, value) {
-          if (xuguSpan.value && !value) {
-            return new Error(t('project.node.table_tips'))
-          }
-        }
-      }
-    },
-    {
-      type: 'input',
-      field: 'targetXuguColumns',
-      name: t('project.node.column'),
-      span: xuguSpan,
-      props: {
-        placeholder: t('project.node.column_tips')
-      }
-    },
-    {
-      type: 'input',
-      field: 'targetXuguFieldsTerminated',
-      name: t('project.node.fields_terminated'),
-      span: xuguSpan,
-      props: {
-        placeholder: t('project.node.fields_terminated_tips')
-      }
-    },
-    {
-      type: 'input',
-      field: 'targetXuguLinesTerminated',
-      name: t('project.node.lines_terminated'),
-      span: xuguSpan,
-      props: {
-        placeholder: t('project.node.lines_terminated_tips')
-      }
-    },
-    {
-      type: 'switch',
-      field: 'targetXuguIsUpdate',
-      span: xuguSpan,
-      name: t('project.node.is_update')
-    },
-    {
-      type: 'input',
-      field: 'targetXuguTargetUpdateKey',
-      name: t('project.node.update_key'),
-      span: updateSpan,
-      props: {
-        placeholder: t('project.node.update_key_tips')
-      }
-    },
-    {
-      type: 'radio',
-      field: 'targetXuguUpdateMode',
-      name: t('project.node.update_mode'),
-      span: updateSpan,
-      options: [
-        {
-          label: t('project.node.only_update'),
-          value: 'updateonly'
-        },
-        {
-          label: t('project.node.allow_insert'),
-          value: ''
         }
       ]
     }

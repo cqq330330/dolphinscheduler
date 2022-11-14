@@ -160,10 +160,10 @@ export function formatParams(data: INodeData): {
                     ? ''
                     : data.srcColumns,
             srcQuerySql:
-                data.srcQueryType === '0' ? '' : data.sourceXuguSrcQuerySql,
+                data.srcQueryType === '0' ? '' : data.sourceMysqlSrcQuerySql,
             srcQueryType: data.srcQueryType,
-            srcType: data.sourceXuguType,
-            srcDatasource: data.sourceXuguDatasource,
+            srcType: data.sourceMysqlType,
+            srcDatasource: data.sourceMysqlDatasource,
             mapColumnHive: data.mapColumnHive,
             mapColumnJava: data.mapColumnJava
           }

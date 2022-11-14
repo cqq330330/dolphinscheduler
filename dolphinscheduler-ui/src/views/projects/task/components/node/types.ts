@@ -129,9 +129,6 @@ interface ISqoopSourceData {
   sourceMysqlSrcQuerySql?: string
   sourceMysqlType?: string
   sourceMysqlDatasource?: string
-  sourceXuguSrcQuerySql?: string
-  sourceXuguType?: string
-  sourceXuguDatasource?: string
   mapColumnHive?: ILocalParam[]
   mapColumnJava?: ILocalParam[]
   sourceHdfsExportDir?: string
