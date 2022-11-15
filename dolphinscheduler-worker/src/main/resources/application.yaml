@@ -128,6 +128,6 @@ spring:
       on-profile: xugu
   datasource:
     driver-class-name: com.xugu.cloudjdbc.Driver
-    url: jdbc:xugu://127.0.0.1:5138/dolphinscheduler
+    url: jdbc:xugu://192.168.2.213:5138/dolphinscheduler
     username: SYSDBA
     password: SYSDBA

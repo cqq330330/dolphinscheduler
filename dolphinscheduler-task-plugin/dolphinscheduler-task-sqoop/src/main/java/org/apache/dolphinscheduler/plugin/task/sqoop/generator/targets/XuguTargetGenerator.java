@@ -21,7 +21,7 @@ import org.apache.dolphinscheduler.plugin.datasource.api.utils.DataSourceUtils;
 import org.apache.dolphinscheduler.plugin.task.sqoop.SqoopTaskExecutionContext;
 import org.apache.dolphinscheduler.plugin.task.sqoop.generator.ITargetGenerator;
 import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.SqoopParameters;
-import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.targets.TargetMysqlParameter;
+import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.targets.TargetXuguParameter;
 import org.apache.dolphinscheduler.spi.datasource.BaseConnectionParam;
 import org.apache.dolphinscheduler.spi.enums.DbType;
 import org.apache.dolphinscheduler.spi.utils.JSONUtils;
@@ -46,10 +46,10 @@ public class XuguTargetGenerator implements ITargetGenerator {
         StringBuilder xuguTargetSb = new StringBuilder();
 
         try {
-            TargetMysqlParameter targetMysqlParameter =
-                JSONUtils.parseObject(sqoopParameters.getTargetParams(), TargetMysqlParameter.class);
+            TargetXuguParameter targetXuguParameter =
+                JSONUtils.parseObject(sqoopParameters.getTargetParams(), TargetXuguParameter.class);
 
-            if (null != targetMysqlParameter && targetMysqlParameter.getTargetDatasource() != 0) {
+            if (null != targetXuguParameter && targetXuguParameter.getTargetDatasource() != 0) {
 
                 // get datasource
                 BaseConnectionParam baseDataSource = (BaseConnectionParam) DataSourceUtils.buildConnectionParams(
@@ -60,51 +60,51 @@ public class XuguTargetGenerator implements ITargetGenerator {
 
                     xuguTargetSb.append(SPACE).append(DB_CONNECT)
                             .append(SPACE).append(DOUBLE_QUOTES)
-                            .append(DataSourceUtils.getJdbcUrl(DbType.MYSQL, baseDataSource)).append(DOUBLE_QUOTES)
+                            .append(DataSourceUtils.getJdbcUrl(DbType.XUGU, baseDataSource)).append(DOUBLE_QUOTES)
                             .append(SPACE).append(DB_USERNAME)
                             .append(SPACE).append(baseDataSource.getUser())
                             .append(SPACE).append(DB_PWD)
                             .append(SPACE).append(DOUBLE_QUOTES)
                             .append(decodePassword(baseDataSource.getPassword())).append(DOUBLE_QUOTES)
                         .append(SPACE).append(TABLE)
-                        .append(SPACE).append(targetMysqlParameter.getTargetTable());
+                        .append(SPACE).append(targetXuguParameter.getTargetTable());
 
-                    if (StringUtils.isNotEmpty(targetMysqlParameter.getTargetColumns())) {
+                    if (StringUtils.isNotEmpty(targetXuguParameter.getTargetColumns())) {
                         xuguTargetSb.append(SPACE).append(COLUMNS)
-                            .append(SPACE).append(targetMysqlParameter.getTargetColumns());
+                            .append(SPACE).append(targetXuguParameter.getTargetColumns());
                     }
 
-                    if (StringUtils.isNotEmpty(targetMysqlParameter.getFieldsTerminated())) {
+                    if (StringUtils.isNotEmpty(targetXuguParameter.getFieldsTerminated())) {
                         xuguTargetSb.append(SPACE).append(FIELDS_TERMINATED_BY);
-                        if (targetMysqlParameter.getFieldsTerminated().contains("'")) {
-                            xuguTargetSb.append(SPACE).append(targetMysqlParameter.getFieldsTerminated());
+                        if (targetXuguParameter.getFieldsTerminated().contains("'")) {
+                            xuguTargetSb.append(SPACE).append(targetXuguParameter.getFieldsTerminated());
 
                         } else {
-                            xuguTargetSb.append(SPACE).append(SINGLE_QUOTES).append(targetMysqlParameter.getFieldsTerminated()).append(SINGLE_QUOTES);
+                            xuguTargetSb.append(SPACE).append(SINGLE_QUOTES).append(targetXuguParameter.getFieldsTerminated()).append(SINGLE_QUOTES);
                         }
                     }
 
-                    if (StringUtils.isNotEmpty(targetMysqlParameter.getLinesTerminated())) {
+                    if (StringUtils.isNotEmpty(targetXuguParameter.getLinesTerminated())) {
                         xuguTargetSb.append(SPACE).append(LINES_TERMINATED_BY);
-                        if (targetMysqlParameter.getLinesTerminated().contains(SINGLE_QUOTES)) {
-                            xuguTargetSb.append(SPACE).append(targetMysqlParameter.getLinesTerminated());
+                        if (targetXuguParameter.getLinesTerminated().contains(SINGLE_QUOTES)) {
+                            xuguTargetSb.append(SPACE).append(targetXuguParameter.getLinesTerminated());
                         } else {
-                            xuguTargetSb.append(SPACE).append(SINGLE_QUOTES).append(targetMysqlParameter.getLinesTerminated()).append(SINGLE_QUOTES);
+                            xuguTargetSb.append(SPACE).append(SINGLE_QUOTES).append(targetXuguParameter.getLinesTerminated()).append(SINGLE_QUOTES);
                         }
                     }
 
-                    if (targetMysqlParameter.getIsUpdate()
-                        && StringUtils.isNotEmpty(targetMysqlParameter.getTargetUpdateKey())
-                        && StringUtils.isNotEmpty(targetMysqlParameter.getTargetUpdateMode())) {
+                    if (targetXuguParameter.getIsUpdate()
+                        && StringUtils.isNotEmpty(targetXuguParameter.getTargetUpdateKey())
+                        && StringUtils.isNotEmpty(targetXuguParameter.getTargetUpdateMode())) {
                         xuguTargetSb.append(SPACE).append(UPDATE_KEY)
-                            .append(SPACE).append(targetMysqlParameter.getTargetUpdateKey())
+                            .append(SPACE).append(targetXuguParameter.getTargetUpdateKey())
                             .append(SPACE).append(UPDATE_MODE)
-                            .append(SPACE).append(targetMysqlParameter.getTargetUpdateMode());
+                            .append(SPACE).append(targetXuguParameter.getTargetUpdateMode());
                     }
                 }
             }
         } catch (Exception e) {
-            logger.error(String.format("Sqoop mysql target params build failed: [%s]", e.getMessage()));
+            logger.error(String.format("Sqoop xugu target params build failed: [%s]", e.getMessage()));
         }
 
         return xuguTargetSb.toString();

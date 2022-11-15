@@ -23,7 +23,7 @@ import org.apache.dolphinscheduler.plugin.task.sqoop.SqoopQueryType;
 import org.apache.dolphinscheduler.plugin.task.sqoop.SqoopTaskExecutionContext;
 import org.apache.dolphinscheduler.plugin.task.sqoop.generator.ISourceGenerator;
 import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.SqoopParameters;
-import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.sources.SourceMysqlParameter;
+import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.sources.SourceXuguParameter;
 import org.apache.dolphinscheduler.spi.datasource.BaseConnectionParam;
 import org.apache.dolphinscheduler.spi.enums.DbType;
 import org.apache.dolphinscheduler.spi.utils.JSONUtils;
@@ -50,9 +50,9 @@ public class XuguSourceGenerator implements ISourceGenerator {
         StringBuilder xuguSourceSb = new StringBuilder();
 
         try {
-            SourceMysqlParameter sourceMysqlParameter = JSONUtils.parseObject(sqoopParameters.getSourceParams(), SourceMysqlParameter.class);
+            SourceXuguParameter sourceXuguParameter = JSONUtils.parseObject(sqoopParameters.getSourceParams(), SourceXuguParameter.class);
 
-            if (null != sourceMysqlParameter) {
+            if (null != sourceXuguParameter) {
                 BaseConnectionParam baseDataSource = (BaseConnectionParam) DataSourceUtils.buildConnectionParams(
                         sqoopTaskExecutionContext.getSourcetype(),
                         sqoopTaskExecutionContext.getSourceConnectionParams());
@@ -61,7 +61,7 @@ public class XuguSourceGenerator implements ISourceGenerator {
 
                     xuguSourceSb.append(SPACE).append(DB_CONNECT)
                             .append(SPACE).append(DOUBLE_QUOTES)
-                            .append(DataSourceUtils.getJdbcUrl(DbType.MYSQL, baseDataSource)).append(DOUBLE_QUOTES)
+                            .append(DataSourceUtils.getJdbcUrl(DbType.XUGU, baseDataSource)).append(DOUBLE_QUOTES)
                         .append(SPACE).append(DB_USERNAME)
                         .append(SPACE).append(baseDataSource.getUser())
                         .append(SPACE).append(DB_PWD)
@@ -69,20 +69,20 @@ public class XuguSourceGenerator implements ISourceGenerator {
                             .append(decodePassword(baseDataSource.getPassword())).append(DOUBLE_QUOTES);
 
                     //sqoop table & sql query
-                    if (sourceMysqlParameter.getSrcQueryType() == SqoopQueryType.FORM.getCode()) {
-                        if (StringUtils.isNotEmpty(sourceMysqlParameter.getSrcTable())) {
+                    if (sourceXuguParameter.getSrcQueryType() == SqoopQueryType.FORM.getCode()) {
+                        if (StringUtils.isNotEmpty(sourceXuguParameter.getSrcTable())) {
                             xuguSourceSb.append(SPACE).append(TABLE)
-                                .append(SPACE).append(sourceMysqlParameter.getSrcTable());
+                                .append(SPACE).append(sourceXuguParameter.getSrcTable());
                         }
 
-                        if (StringUtils.isNotEmpty(sourceMysqlParameter.getSrcColumns())) {
+                        if (StringUtils.isNotEmpty(sourceXuguParameter.getSrcColumns())) {
                             xuguSourceSb.append(SPACE).append(COLUMNS)
-                                .append(SPACE).append(sourceMysqlParameter.getSrcColumns());
+                                .append(SPACE).append(sourceXuguParameter.getSrcColumns());
                         }
-                    } else if (sourceMysqlParameter.getSrcQueryType() == SqoopQueryType.SQL.getCode()
-                        && StringUtils.isNotEmpty(sourceMysqlParameter.getSrcQuerySql())) {
+                    } else if (sourceXuguParameter.getSrcQueryType() == SqoopQueryType.SQL.getCode()
+                        && StringUtils.isNotEmpty(sourceXuguParameter.getSrcQuerySql())) {
 
-                        String srcQuery = sourceMysqlParameter.getSrcQuerySql();
+                        String srcQuery = sourceXuguParameter.getSrcQuerySql();
                         xuguSourceSb.append(SPACE).append(QUERY)
                             .append(SPACE).append(DOUBLE_QUOTES).append(srcQuery);
 
@@ -94,7 +94,7 @@ public class XuguSourceGenerator implements ISourceGenerator {
                     }
 
                     //sqoop hive map column
-                    List<Property> mapColumnHive = sourceMysqlParameter.getMapColumnHive();
+                    List<Property> mapColumnHive = sourceXuguParameter.getMapColumnHive();
 
                     if (null != mapColumnHive && !mapColumnHive.isEmpty()) {
                         StringBuilder columnMap = new StringBuilder();
@@ -109,7 +109,7 @@ public class XuguSourceGenerator implements ISourceGenerator {
                     }
 
                     //sqoop map column java
-                    List<Property> mapColumnJava = sourceMysqlParameter.getMapColumnJava();
+                    List<Property> mapColumnJava = sourceXuguParameter.getMapColumnJava();
 
                     if (null != mapColumnJava && !mapColumnJava.isEmpty()) {
                         StringBuilder columnMap = new StringBuilder();
@@ -125,7 +125,7 @@ public class XuguSourceGenerator implements ISourceGenerator {
                 }
             }
         } catch (Exception e) {
-            logger.error(String.format("Sqoop task mysql source params build failed: [%s]", e.getMessage()));
+            logger.error(String.format("Sqoop task xugu source params build failed: [%s]", e.getMessage()));
         }
 
         return xuguSourceSb.toString();

@@ -1265,7 +1265,8 @@ INSERT INTO t_ds_user (id, user_name, user_password, user_type, email, phone, te
 INSERT INTO t_ds_version (id, version) VALUES (1, '3.0.1');
 
 --兼容mysql与pg系统表
-create view "information_schema.TABLES" as select * from user_tables;
+create schema information_schema;
+create view information_schema.TABLES as select * from user_tables;
 
 
 
