@@ -62,6 +62,8 @@ public class XuguSourceGenerator implements ISourceGenerator {
                     xuguSourceSb.append(SPACE).append(DB_CONNECT)
                             .append(SPACE).append(DOUBLE_QUOTES)
                             .append(DataSourceUtils.getJdbcUrl(DbType.XUGU, baseDataSource)).append(DOUBLE_QUOTES)
+                            .append(SPACE).append(DB_DRIVER)
+                            .append(SPACE).append(XUGU_DRIVER_CLASSNAME)
                         .append(SPACE).append(DB_USERNAME)
                         .append(SPACE).append(baseDataSource.getUser())
                         .append(SPACE).append(DB_PWD)

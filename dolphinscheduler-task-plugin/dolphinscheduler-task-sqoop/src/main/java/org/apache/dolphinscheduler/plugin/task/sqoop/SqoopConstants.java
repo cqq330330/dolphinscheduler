@@ -32,6 +32,8 @@ public final class SqoopConstants {
 
     //sqoop db
     public static final String DB_CONNECT = "--connect";
+    public static final String DB_DRIVER = "--driver";
+    public static final String XUGU_DRIVER_CLASSNAME = "com.xugu.cloudjdbc.Driver";
     public static final String DB_USERNAME = "--username";
     public static final String DB_PWD = "--password";
     public static final String TABLE = "--table";
