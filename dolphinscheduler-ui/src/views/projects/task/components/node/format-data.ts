@@ -130,6 +130,19 @@ export function formatParams(data: INodeData): {
             targetUpdateMode: data.targetMysqlUpdateMode
           }
           break
+        case 'XUGU':
+          targetParams = {
+            targetType: data.targetMysqlType,
+            targetDatasource: data.targetMysqlDatasource,
+            targetTable: data.targetMysqlTable,
+            targetColumns: data.targetMysqlColumns,
+            fieldsTerminated: data.targetMysqlFieldsTerminated,
+            linesTerminated: data.targetMysqlLinesTerminated,
+            isUpdate: data.targetMysqlIsUpdate,
+            targetUpdateKey: data.targetMysqlTargetUpdateKey,
+            targetUpdateMode: data.targetMysqlUpdateMode
+          }
+          break
         default:
           break
       }
