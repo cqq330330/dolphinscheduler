@@ -17,6 +17,7 @@
 
 package org.apache.dolphinscheduler.plugin.task.sqoop.parameter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dolphinscheduler.plugin.task.api.enums.ResourceType;
 import org.apache.dolphinscheduler.plugin.task.api.model.Property;
 import org.apache.dolphinscheduler.plugin.task.api.parameters.AbstractParameters;
@@ -25,7 +26,9 @@ import org.apache.dolphinscheduler.plugin.task.api.parameters.resource.ResourceP
 import org.apache.dolphinscheduler.plugin.task.sqoop.SqoopJobType;
 import org.apache.dolphinscheduler.plugin.task.sqoop.SqoopTaskExecutionContext;
 import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.sources.SourceMysqlParameter;
+import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.sources.SourceXuguParameter;
 import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.targets.TargetMysqlParameter;
+import org.apache.dolphinscheduler.plugin.task.sqoop.parameter.targets.TargetXuguParameter;
 import org.apache.dolphinscheduler.spi.utils.JSONUtils;
 import org.apache.dolphinscheduler.spi.utils.StringUtils;
 
@@ -220,6 +223,16 @@ public class SqoopParameters  extends AbstractParameters {
             resources.put(ResourceType.DATASOURCE, targetMysqlParameter.getTargetDatasource());
         }
 
+        SourceXuguParameter sourceXuguParameter = JSONUtils.parseObject(this.getSourceParams(), SourceXuguParameter.class);
+        if (sourceXuguParameter.getSrcDatasource() != 0) {
+            resources.put(ResourceType.DATASOURCE, sourceXuguParameter.getSrcDatasource());
+        }
+
+        TargetXuguParameter targetXuguParameter = JSONUtils.parseObject(this.getTargetParams(), TargetXuguParameter.class);
+        if (targetXuguParameter.getTargetDatasource() != 0) {
+            resources.put(ResourceType.DATASOURCE, targetXuguParameter.getTargetDatasource());
+        }
+
         return resources;
     }
 
@@ -233,8 +246,36 @@ public class SqoopParameters  extends AbstractParameters {
         SourceMysqlParameter sourceMysqlParameter = JSONUtils.parseObject(this.getSourceParams(), SourceMysqlParameter.class);
         TargetMysqlParameter targetMysqlParameter = JSONUtils.parseObject(this.getTargetParams(), TargetMysqlParameter.class);
 
-        DataSourceParameters dataSource = (DataSourceParameters) parametersHelper.getResourceParameters(ResourceType.DATASOURCE, sourceMysqlParameter.getSrcDatasource());
-        DataSourceParameters dataTarget = (DataSourceParameters) parametersHelper.getResourceParameters(ResourceType.DATASOURCE, targetMysqlParameter.getTargetDatasource());
+        SourceXuguParameter sourceXuguParameter = JSONUtils.parseObject(this.getSourceParams(), SourceXuguParameter.class);
+        TargetXuguParameter targetXuguParameter = JSONUtils.parseObject(this.getTargetParams(), TargetXuguParameter.class);
+
+        DataSourceParameters dataSource = null;
+        DataSourceParameters dataTarget = null;
+        DataSourceParameters xugudataSource = null;
+        DataSourceParameters xugudataTarget = null;
+        if(Objects.nonNull(sourceMysqlParameter)){
+            if (sourceMysqlParameter.getSrcDatasource() != 0) {
+                dataSource = (DataSourceParameters) parametersHelper.getResourceParameters(ResourceType.DATASOURCE, sourceMysqlParameter.getSrcDatasource());
+            }
+        }
+
+        if(Objects.nonNull(targetMysqlParameter)){
+            if (targetMysqlParameter.getTargetDatasource() != 0) {
+                dataTarget = (DataSourceParameters) parametersHelper.getResourceParameters(ResourceType.DATASOURCE, targetMysqlParameter.getTargetDatasource());
+            }
+        }
+
+        if(Objects.nonNull(sourceXuguParameter)){
+            if (sourceXuguParameter.getSrcDatasource() != 0) {
+                xugudataSource = (DataSourceParameters) parametersHelper.getResourceParameters(ResourceType.DATASOURCE, sourceXuguParameter.getSrcDatasource());
+            }
+        }
+
+        if(Objects.nonNull(targetXuguParameter)){
+            if (targetXuguParameter.getTargetDatasource() != 0) {
+                xugudataTarget = (DataSourceParameters) parametersHelper.getResourceParameters(ResourceType.DATASOURCE, targetXuguParameter.getTargetDatasource());
+            }
+        }
 
         if (Objects.nonNull(dataSource)) {
             sqoopTaskExecutionContext.setDataSourceId(sourceMysqlParameter.getSrcDatasource());
@@ -246,6 +287,18 @@ public class SqoopParameters  extends AbstractParameters {
             sqoopTaskExecutionContext.setDataTargetId(targetMysqlParameter.getTargetDatasource());
             sqoopTaskExecutionContext.setTargetType(dataTarget.getType());
             sqoopTaskExecutionContext.setTargetConnectionParams(dataTarget.getConnectionParams());
+        }
+
+        if (Objects.nonNull(xugudataSource)) {
+            sqoopTaskExecutionContext.setDataSourceId(sourceXuguParameter.getSrcDatasource());
+            sqoopTaskExecutionContext.setSourcetype(xugudataSource.getType());
+            sqoopTaskExecutionContext.setSourceConnectionParams(xugudataSource.getConnectionParams());
+        }
+
+        if (Objects.nonNull(xugudataTarget)) {
+            sqoopTaskExecutionContext.setDataTargetId(targetXuguParameter.getTargetDatasource());
+            sqoopTaskExecutionContext.setTargetType(xugudataTarget.getType());
+            sqoopTaskExecutionContext.setTargetConnectionParams(xugudataTarget.getConnectionParams());
         }
 
         return sqoopTaskExecutionContext;

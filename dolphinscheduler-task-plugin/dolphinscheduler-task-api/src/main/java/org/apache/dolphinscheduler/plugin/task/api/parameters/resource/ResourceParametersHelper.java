@@ -17,12 +17,14 @@
 
 package org.apache.dolphinscheduler.plugin.task.api.parameters.resource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dolphinscheduler.plugin.task.api.enums.ResourceType;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
 public class ResourceParametersHelper {
 
     private Map<ResourceType, Map<Integer, AbstractResourceParameters>> resourceMap = new HashMap<>();
@@ -53,6 +55,10 @@ public class ResourceParametersHelper {
     }
 
     public AbstractResourceParameters getResourceParameters(ResourceType resourceType, Integer code) {
-        return this.getResourceMap(resourceType).get(code);
+        Map<Integer, AbstractResourceParameters> map = this.getResourceMap(resourceType);
+        log.info("---------------------------------------------------------------------");
+        log.info("ResourceParameters"+map.toString());
+        log.info("---------------------------------------------------------------------");
+        return map.get(code);
     }
 }
