@@ -229,15 +229,15 @@ alter table SYSDBA.T_DS_ALERTGROUP
 
 create table SYSDBA.T_DS_ALERT_PLUGIN_INSTANCE
 (
-    "id"                     integer not null,
+    "id"                     integer identity(1,1) not null,
     "plugin_define_id"       integer not null,
     "plugin_instance_params" clob comment 'plugin instance params. Also contain the params value which user input in web ui.',
     "create_time"            timestamp default SYSDATE,
     "update_time"            timestamp default SYSDATE,
-    "instance_name"          varchar(200) comment 'alert instance name'
+    "instance_name"          varchar(200) comment 'alert instance name',
+    constraint PK primary key (ID)
 );
-alter table SYSDBA.T_DS_ALERT_PLUGIN_INSTANCE
-    add constraint PK primary key (ID);
+
 
 create table SYSDBA.T_DS_ALERT_SEND_STATUS
 (
@@ -321,7 +321,7 @@ create table SYSDBA.T_DS_DQ_COMPARISON_TYPE
 
 create table SYSDBA.T_DS_DQ_EXECUTE_RESULT
 (
-    "id"                    integer not null,
+    "id"                    integer identity(1,1) not null,
     "process_definition_id" integer,
     "process_instance_id"   integer,
     "task_instance_id"      integer,
@@ -338,10 +338,9 @@ create table SYSDBA.T_DS_DQ_EXECUTE_RESULT
     "comparison_type"       integer,
     "error_output_path"     clob,
     "create_time"           datetime,
-    "update_time"           datetime
+    "update_time"           datetime,
+    constraint PK primary key (ID)
 );
-alter table SYSDBA.T_DS_DQ_EXECUTE_RESULT
-    add constraint PK primary key (ID);
 
 create table SYSDBA.T_DS_DQ_RULE
 (
@@ -391,7 +390,7 @@ create table SYSDBA.T_DS_DQ_RULE_INPUT_ENTRY
 
 create table SYSDBA.T_DS_DQ_TASK_STATISTICS_VALUE
 (
-    "id"                    integer not null,
+    "id"                    integer identity(1,1) not null,
     "process_definition_id" integer,
     "task_instance_id"      integer,
     "rule_id"               integer not null,
@@ -400,10 +399,10 @@ create table SYSDBA.T_DS_DQ_TASK_STATISTICS_VALUE
     "statistics_value"      double,
     "data_time"             datetime,
     "create_time"           datetime,
-    "update_time"           datetime
+    "update_time"           datetime,
+    constraint PK primary key (ID)
 );
-alter table SYSDBA.T_DS_DQ_TASK_STATISTICS_VALUE
-    add constraint PK primary key (ID);
+
 
 create table SYSDBA.T_DS_ENVIRONMENT
 (
