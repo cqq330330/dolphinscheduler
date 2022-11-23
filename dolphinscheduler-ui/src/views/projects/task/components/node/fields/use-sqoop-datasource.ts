@@ -43,52 +43,56 @@ export function useDatasource(
     loading.value = false
   }
   const refreshOptionsSource = async (type: IDataBase) => {
-    if (loading.value) return
-    loading.value = true
-    const result = await queryDataSourceList({ type })
-    dataSourceList.value = result.map((item: { name: string; id: number }) => ({
-      label: item.name,
-      value: item.id
-    }))
-    loading.value = false
-    if (!result.length && model.sourceMysqlDatasource) model.sourceMysqlDatasource = null
-    if (result.length && model.sourceMysqlDatasource) {
-      const item = find(result, { id: model.sourceMysqlDatasource })
-      if (!item) {
-        model.sourceMysqlDatasource = null
+    if(type!=undefined){
+      const result = await queryDataSourceList({ type })
+      dataSourceList.value = result.map((item: { name: string; id: number }) => ({
+        label: item.name,
+        value: item.id
+      }))
+      if (!result.length && model.sourceMysqlDatasource) model.sourceMysqlDatasource = null
+      if (result.length && model.sourceMysqlDatasource) {
+        const item = find(result, { id: model.sourceMysqlDatasource })
+        if (!item) {
+          model.sourceMysqlDatasource = null
+        }
       }
     }
   }
 
   const refreshOptionsTarget = async (type: IDataBase) => {
-    if (loading.value) return
-    loading.value = true
-    const result = await queryDataSourceList({ type })
-    dataSourceList.value = result.map((item: { name: string; id: number }) => ({
-      label: item.name,
-      value: item.id
-    }))
-    loading.value = false
-    if (!result.length && model.targetMysqlDatasource) model.targetMysqlDatasource = null
-    if (result.length && model.targetMysqlDatasource) {
-      const item = find(result, { id: model.targetMysqlDatasource })
-      if (!item) {
-        model.targetMysqlDatasource = null
+    if(type!=undefined){
+      const result = await queryDataSourceList({ type })
+      dataSourceList.value = result.map((item: { name: string; id: number }) => ({
+        label: item.name,
+        value: item.id
+      }))
+      if (!result.length && model.targetMysqlDatasource) model.targetMysqlDatasource = null
+      if (result.length && model.targetMysqlDatasource) {
+        const item = find(result, { id: model.targetMysqlDatasource })
+        if (!item) {
+          model.targetMysqlDatasource = null
+        }
       }
     }
   }
 
   const onChangeSource = (type: IDataBase) => {
+    if(type!=undefined){
+      model.sourceType = type;
+    }
+
     refreshOptionsSource(type)
   }
 
   const onChangeTarget = (type: IDataBase) => {
+    if(type!=undefined){
+      model.targetType = type;
+    }
     refreshOptionsTarget(type)
   }
 
   onMounted(() => {
     getDataSource('MYSQL')
-    //getDataSource('XUGU')
   })
 
   watch(
@@ -105,7 +109,7 @@ export function useDatasource(
         model.targetMysqlType
       ],
       () => {
-        onChangeSource(model.targetMysqlType)
+        onChangeTarget(model.targetMysqlType)
       }
   )
 
@@ -118,10 +122,7 @@ export function useDatasource(
       options: [{ label: 'MYSQL', value: 'MYSQL' },{ label: 'XUGU', value: 'XUGU' }],
       validate: {
         required: true
-      },
-      props: {
-        'on-update:value': onChangeTarget
-      },
+      }
     },
     {
       type: 'select',
